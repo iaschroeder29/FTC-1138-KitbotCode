@@ -74,7 +74,7 @@ public class BioBuzzStarterBotTeleop extends OpMode {
      * enough to make a successful throw.
      */
     public final int LAUNCHER_TARGET_VELOCITY = 1400;
-    public final int LAUNCHER_MIN_VELOCITY = 13`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````50;
+    public final int LAUNCHER_MIN_VELOCITY = 1350;
 
     /*
      * These two variables store the power we need to apply to the motors. In other cases, we may
@@ -270,6 +270,7 @@ public class BioBuzzStarterBotTeleop extends OpMode {
          */
         if (gamepad2.left_bumper) {
             launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+            telemetry.addData("Flywheel target", LAUNCHER_TARGET_VELOCITY);
         } else {
             launcher.setVelocity(0);
         }
@@ -284,11 +285,11 @@ public class BioBuzzStarterBotTeleop extends OpMode {
         /*if (gamepad2.right_bumper && launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             windmillServo.setPower(1);
             intakePower += 0.5;
-        } else */if (gamepad2.cross) {
+        } else */if (gamepad2.cross && launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             // Manual indexer: A advances elements, B backs them out to clear a jam.
-            windmillServo.setPower(1);
+            windmillServo.setPower(0.4);
         } else if (gamepad2.circle) {
-            windmillServo.setPower(-1);
+            windmillServo.setPower(-0.4);
         } else {
             windmillServo.setPower(0);
         }

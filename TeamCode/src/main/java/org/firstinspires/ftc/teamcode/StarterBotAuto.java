@@ -32,6 +32,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor.SelfTestStatus.COMPLETE;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -77,8 +78,8 @@ public class StarterBotAuto extends OpMode
      * in the launch() function to only run the windmill servo when the motor is spinning fast
      * enough to make a successful throw.
      */
-    public final int LAUNCHER_TARGET_VELOCITY = 3000;
-    public final int LAUNCHER_MIN_VELOCITY = 2700;
+    public final int LAUNCHER_TARGET_VELOCITY = 1350;
+    public final int LAUNCHER_MIN_VELOCITY = 1300;
 
     /*
      * Here we capture a few variables used in driving the robot. DRIVE_SPEED and ROTATE_SPEED
@@ -254,6 +255,7 @@ public class StarterBotAuto extends OpMode
          */
         // Reset each loop; launch() adds to it, and without this it would grow every loop.
         intakePower = 0;
+        telemetry.addData("Flywheel target", LAUNCHER_TARGET_VELOCITY);
         switch (autonomousState) {
             case LAUNCH:
                 launch(true);
@@ -264,9 +266,11 @@ public class StarterBotAuto extends OpMode
                 }
                 break;
             case DRIVE:
-                if(drive(DRIVE_SPEED, 200, DistanceUnit.MM, 2)){
+                if(drive(DRIVE_SPEED, 2300, DistanceUnit.MM, 2))
+                /*{if(rotate(ROTATE_SPEED, -90, AngleUnit.DEGREES, 2))
+                {if(drive(DRIVE_SPEED, 1500, DistanceUnit.MM, 2))*/{
                     autonomousState = AutonomousState.COMPLETE;
-                }
+                }//}}
                 break;
             case COMPLETE:
                 telemetry.addLine("Auto Complete!");
@@ -303,12 +307,13 @@ public class StarterBotAuto extends OpMode
     void launch(boolean input) {
         if (input) {
             launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+            telemetry.addData("Flywheel target", LAUNCHER_TARGET_VELOCITY);
         } else {
             launcher.setVelocity(0);
         }
 
         if (input && launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
-            windmillServo.setPower(1);
+            windmillServo.setPower(0.4);
             intakePower += 0.5;
         } else {
             windmillServo.setPower(0);
@@ -401,9 +406,6 @@ public class StarterBotAuto extends OpMode
             driveTimer.reset();
         }
 
-        return (driveTimer.seconds() > holdSeconds);
+         return (driveTimer.seconds() > holdSeconds);
     }
 }
-
-
-
